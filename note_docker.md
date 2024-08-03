@@ -197,46 +197,92 @@ $ docker rmi busybox
 ```
 <img src="./images/docker_rmi.png">
 
-## 3. docker의 image란?
+## 3. docker의 image와 docker file
 - `docker image` : 어떤 애플리케이션(app, api, sevice)에 대해서 단순히 코드뿐만 아니라(소스 코드),애플리케이션과 dependent 한 모든 것을 함께 패키징한 데이터
    - **애플리케이션의 모든 것을 함께 패키징한 데이터**
 - `docker file` : 도커 이미지를 쉽게 만들 수 있는 템플릿
-   - FROM : base image 설정 
-      - FROM <image>[:<tag>] [AS <name>]
-      - FROM ubuntu, FROM ubuntu:18.04, FROM nginx:latest AS ngx
-      - nginx는 플라스크나 장고에서 사용하는 웹서버 (정적 페이지 요청을 처리하기 위한 웹서버 중 하나)
-   - COPY : <src>의 파일이나 디렉토리를 <dest> 경로에 복사
-      - COPY <src>...<dest>
-      - COPY a.txt /test-dir : a.txt 파일을 test-dir에 이름 그대로 복사
-      - COPY a.txt /test-dir/b.txt : a.txt 파일을 test-dir에 b.txt로 복사
-   - RUN : 도커 컨테이너에서 명시한 커맨드를 실행
-      - RUN <command>
-      - RUN ["executable-command", "parameter1", "parameter2"]
-      - RUN pip install torch : pip에서 torch 패키지를 설치하도록 실행
-      - RUN pip install -r requirement.txt : requirement.txt 파일의 패키지를 pip를 사용해 install 실행
-   - CMD : 도커 컨테이너 시작 될 때 명시한 커맨드를 실행
-      - ENTRYPOINT 명령어도 비슷한 기능 
-      - 하나의 도커 이미지에서 하나의 CMD만 사용할 수 있음, RUN은 여러번 사용가능함
-      - CMD <command>
-      - CMD ["executable-command", "parameter1", "parameter2"]
-      - ENTRYPOINT와 함께 사용시 : CMD ["parameter1", "parameter2"]
-      - CMD python main.py : 컨테이너 시작 시 main.py 파일을 python으로 실행
-   - WORKDIR : 어떤 명령어를 실행할 디렉토리 설정, 이 디렉토리가 없으면 생성함
-      - WORKDIR <dir>
-      - WORKDIR /home/docker-tutorial
-   - ENV : 컨테이너 내부에서 지속적으로 사용될 environment variable의 값 설정
-      - ENV <key> <value>
-      - ENV <key>=<value>
-      - ENV locale-gen ko_KR.UTF-8
-      - ENV LANG ko_KR.UTF-8
-      - ENV LANGUAGE ko_KR.UTF-8
-      - ENV LC_ALL ko_KR.UTF-8
-   - EXPOSE : 컨테이너에서 포트/프로토콜 지정, 디폴트는 TCP
-      - EXPOSE <port>
-      - EXPOSE <port>/<protocol>
-      - EXOSE 8080
+
+### 1) docker file 만들기
+```
+$ cd $HOME
+$ mkdir docker_tutorial
+$ cd docker_tutorial
+$ touch dockerfile
+```
+
+### 2) dockerfile에서 사용할 수 있는 기본적인 명령어들
+- FROM : base image 설정 
+   - FROM <image>[:<tag>] [AS <name>]
+   - FROM ubuntu, FROM ubuntu:18.04, FROM nginx:latest AS ngx
+   - nginx는 플라스크나 장고에서 사용하는 웹서버 (정적 페이지 요청을 처리하기 위한 웹서버 중 하나)
+- COPY : <src>의 파일이나 디렉토리를 <dest> 경로에 복사
+   - COPY <src>...<dest>
+   - COPY a.txt /test-dir : a.txt 파일을 test-dir에 이름 그대로 복사
+   - COPY a.txt /test-dir/b.txt : a.txt 파일을 test-dir에 b.txt로 복사
+- RUN : 도커 컨테이너에서 명시한 커맨드를 실행
+   - RUN <command>
+   - RUN ["executable-command", "parameter1", "parameter2"]
+   - RUN pip install torch : pip에서 torch 패키지를 설치하도록 실행
+   - RUN pip install -r requirement.txt : requirement.txt 파일의 패키지를 pip를 사용해 install 실행
+- CMD : 도커 컨테이너 시작 될 때 명시한 커맨드를 실행
+   - ENTRYPOINT 명령어도 비슷한 기능 
+   - 하나의 도커 이미지에서 하나의 CMD만 사용할 수 있음, RUN은 여러번 사용가능함
+    - CMD <command>
+   - CMD ["executable-command", "parameter1", "parameter2"]
+   - ENTRYPOINT와 함께 사용시 : CMD ["parameter1", "parameter2"]
+   - CMD python main.py : 컨테이너 시작 시 main.py 파일을 python으로 실행
+- WORKDIR : 어떤 명령어를 실행할 디렉토리 설정, 이 디렉토리가 없으면 생성함
+   - WORKDIR <dir>
+   - WORKDIR /home/docker-tutorial
+- ENV : 컨테이너 내부에서 지속적으로 사용될 environment variable의 값 설정
+   - ENV <key> <value>
+   - ENV <key>=<value>
+   - ENV locale-gen ko_KR.UTF-8
+   - ENV LANG ko_KR.UTF-8
+   - ENV LANGUAGE ko_KR.UTF-8
+   - ENV LC_ALL ko_KR.UTF-8
+- EXPOSE : 컨테이너에서 포트/프로토콜 지정, 디폴트는 TCP
+   - EXPOSE <port>
+   - EXPOSE <port>/<protocol>
+   - EXOSE 8080
 - FROM, RUN, COPY, COMMAND, WORKDIR, EXPOSE, ENV ...
 
+### 3) docker file 작성하기
+- 생성한 dockerfile을 편집기로 열고 dockerfile의 명령어를 사용하여 작성한다.
+```
+$ vim dockerfile
+
+- dockerfile 명령어 작성
+FROM ubuntu:18.04 (base image 설정)
+RUN apt-get update (apt 명령어를 실행)
+CMD ["echo", "Hello docker"] (docker container가 실행되면 CMD 문구 출력)
+```
+<img src="./images/docker_dockerfile.png">
+
+### 4) docker build 
+- 작성한 dockerfile을 image로 만드는 명령어
+   - docker buildx build [options] path | url | -
+   - docker buildx build, docker buildx b
+-** build에서 image의 이름에 tag를 넣은경우 image 제거, image 실행 등을 할때 tag 부분까지 입력해야한다.**
+
+#### docker build
+- 현재 디렉토리의 (.) 도커 파일 (dockerfile)로부터 my-image:v2.0.0 이라는 도커 이미지를 생성
+```
+$ docker buildx build -t my-image:v2.0.0 .
+$ docker images | grep my-image
+```
+<img src="./images/docker_build.png">
+
+#### image 실행
+- 도커 이미지를 만들고 컨테이너에서 실행 
+   - 이미지를 실행하면 CMD의 Hello MLops 문구가 출력된다.
+   - docker ps -a 로 컨테이너를 조회하면 my_first_image:v2.0.0 이미지를 실행한 컨테이너를 확인 할 수 있다.
+   - container의 이름을 설정하지 않았으므로 랜덤하게 만들하지 이름이 설정된다.
+```
+$ docker run my_first_image:v2.0.0
+$ docker ps -a
+```
+<img src="./images/docker_build_2.png">
 
 
 
