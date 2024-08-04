@@ -332,7 +332,7 @@ $ docker exec -it my_first_container /bin/bash
 $ docker run -d -p 5000:5000 --name registry registry
 $ docker ps
 ```
-<img src="./images/docker_registry.png">
+<img src="./images/docker_registry_1.png">
 
 ### 2) 도커 이미지 태그 : 이미지를 레지스트리를 바라보게끔 설정
 - localhost:5000/my_first_image:v1.0 이라는 이미지가 새로 생성된다.
@@ -370,7 +370,7 @@ $ curl -X GET http://localhost:500/v2/<image name>/tags/list
 #### hub.docker.com 에서 계정 생성
    - username : sainthong
    - pw : Lt_6
-<img src="./images/docker_hub.png">
+<img src="./images/docker_hub_1.png">
 
 #### 터미널에서 로그인 
 - 한번 인증 받으면 아이디 비번 입력 하지 않아도 로그인 됨
