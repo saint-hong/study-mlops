@@ -284,9 +284,32 @@ $ docker ps -a
 ```
 <img src="./images/docker_build_2.png">
 
+### 5) container 내부에 req.txt 만들고 파일리스트를 텍스트로 반환하는 docker image
 
+#### docker file 생성
+- RUN 명령어는 컨테이너 내부에서 실행한다.
+```
+FROM ubuntu:18.04
+CMD ["echo", "make req.txt and ls_file.txt"]
+RUN touch req.txt
+RUN ls > ls_file.txt
+```
 
+#### docker image 생성
+- 생성한 docker file을 image로 만든다.
+- 맨 마지막에는 dockerfile의 경로
+```
+$ docker build -t my_first_image:v1 .
+```
 
+#### docker file의 명령어가 실행됐는지 확인하기 위해 컨테이너를 백그라운드에 실행하고 exec로 접속
+- 마지막에 /bin/bash 를 꼭 넣어주어야 container가 실행된다.
+```
+$ docker run -it -d --name my_first_container my_first_image:v1 /bin/bash
+$ docker exec -it my_first_container /bin/bash
+```
+<img src="./images/docker_first_image_1.png">
+<img src="./images/docker_first_image_2.png">
 
 
 
