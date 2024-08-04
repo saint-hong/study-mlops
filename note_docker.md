@@ -312,14 +312,85 @@ $ docker exec -it my_first_container /bin/bash
 <img src="./images/docker_first_image_1.png">
 <img src="./images/docker_first_image_2.png">
 
+## 4. docker registry
+- 도커 이미지 저장소
+   - https://docs.docker.com/registry/
+   - `이미지 및 기타 컨텐츠를 저장하고 배포하기 위한 오픈소스 구형 레지스트리`
+   - registry는 Distribution(배포) 이름으로 들어감
+   - Docker Hub의 레지스트리 구현은 배포(distribution)를 기반으로 한다.
+- `build 한 도커 이미지를 도커 레지스트리에 push하여 배포하기.`
+   - **방법 1 : 도커 레지스트리를 로컬에서 만들고 이미지를 push**
+      - 도커 레지스트리에는 도커 컨테이너가 이미 준비되어 있음
+   - **방법 2 : 도커 hub에 가입하여 내 레지스트리에 이미지를 push**
 
+### 1) 로컬에서 레지스트리 띄우고 이미지 push
+- 레지스트리 생성 : 
+   - 5000 포트에 registry 라는 이미지를 실행하는 registry 라는 이름의 컨테이를 만들고 실행한다.
+   - docker ps 하면 registry 컨테이너가 실행 중이다.
+   - 이게 registry 역할을 한다. 여기에 이미지를 push 할 수 있다.
+```
+$ docker run -d -p 5000:5000 --name registry registry
+$ docker ps
+```
+<img src="./images/docker_registry.png">
 
+### 2) 도커 이미지 태그 : 이미지를 레지스트리를 바라보게끔 설정
+- localhost:5000/my_first_image:v1.0 이라는 이미지가 새로 생성된다.
+- my_first_image:v1.0 은 기존에 만들었던 것, localhost:5000/my_first_image:v1.0 은 레지스트리를 태그한 새로운 이미지
+```
+$ docker tag my_first_image:v1.0 localhost:5000/my_first_image:v1.0
+$ docker images
+```
+<img src="./images/docker_resgistry.png">
 
+### 3) 도커 이미지를 레지스트리에 push
+- 이미지가 레지스트리에 저장된다.
+```
+$ docker push localhost:5000/my-image:v3.0.0
+```
+<img src="./images/docker_registry_3.png">
 
+### 4) 레지스트리의 저장 된 이미지 확인
+- curl을 사용해 registry에 저장된 image를 조회하면  dict 형태로 출력 된다. 이미지의 이름이 같으면 하나로 표시됨 
+```      
+$ curl -X GET http://localhost:5000/v2/_catalog
+```
 
+- 해당 이미지의 tag가 리스트 형태로 출력된다. 여러개의 같은 이름의 이미지가 있으면, 여러개의 tag가 리스트에 출력된다.
+```
+$ curl -X GET http://localhost:500/v2/<image name>/tags/list 
+```  
+<img src="./images/docker_registry_4.png">
 
+### 5) 이미지를 레지스트리에 저장하는 방법 요약
+- 도커 레지스트리 생성하고(docker run) ===> 도커 이미지를 이 레지스트 주소로 태깅하고(docker tag) ===> docker push 
 
+### 6) docker hub에서 레지스트리 만들고 이미지 push 하기
 
+#### hub.docker.com 에서 계정 생성
+   - username : sainthong
+   - pw : Lt_6
+<img src="./images/docker_hub.png">
 
+#### 터미널에서 로그인 
+- 한번 인증 받으면 아이디 비번 입력 하지 않아도 로그인 됨
+```
+$ docker login
+```
+#### docker hub의 레포지토리 이름으로 docker image 태깅
+```
+$ docker tag my-image:v3.0.0 sainthong/my-image:v3.0.0
+```
 
+### hub의 레포지토리로 태킹한 이미지 push
+```
+$ docker push sainthong/my-image:v3.0.0
+```
+<img src="./images/docker_hub_2.png">
+
+#### hub의 내 계정에서 해당 repository 확인 
+- push 한 image 들이 업로드 되어 있다.
+- 로컬의 registry 컨테이너가 실행중이면, 여기에 push한 image는 삭제가 안된다.
+   - registry를 중지한 후에 삭제 된다.??
+<img src="./images/docker_hub_3.png">
 
