@@ -341,7 +341,7 @@ $ docker ps
 $ docker tag my_first_image:v1.0 localhost:5000/my_first_image:v1.0
 $ docker images
 ```
-<img src="./images/docker_resgistry.png">
+<img src="./images/docker_resgistry_2.png">
 
 ### 3) 도커 이미지를 레지스트리에 push
 - 이미지가 레지스트리에 저장된다.
