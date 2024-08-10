@@ -21,7 +21,27 @@
 - minikube의 버전이 중요하다. 이 버전에 따라서 여러가지 패키지들의 버전 연관성이 달라지게 된다
    - 최신 버전이라고 해서 좋은 것만은 아니다. minikube는 최신이지만 내가 사용하려는 다른 패키지와 호환이 안되면 이와 연관된 다른 패키지들도 원하는 데로 동작이 안될 수 있다.
    - 따라서 강의 당시 버전으로 설치한다.
+   - v1.22.0
 - minikube는 자유롭게 삭제하고 재설치 할 수 있다.
+
+#### minikube 바이너리 다운로드
+- 버전은 교육 과정과 같은 v1.22.0으로 다운로도 한다.
+- 현재 위치에 amd64 설치 파일이 다운로드 된다.
+   - 이 파일을 지우지 않는 이상 minikube를 삭제후에 다시 설치 할 수 있다.
+```
+$ curl -LO https://storage.googleapis.com/minikube/releases/v1.22.0/minikube-linux-amd64
+```
+
+#### 바이너리 파일 설치
+- /usr/local/bin/ 디렉토리에 minikube를 설치한다.
+- 이외에도 kubectl, helm 등 여러 실행 프로그램들을 이 위치에 설치한다.
+```
+$ sudo install minikube-linux-amd64 /usr/local/bin/minikube
+```
+
+#### minikube 삭제 시
+- minikube delete로 삭제 후,
+- /usr/local/bin/ 에 설치한 minikube를 직접 제거한다.(sudo rm minikube)
 
 ### 3) kubectl 설치
 - kubectl : kubernetes cluster(server)에 요청을 간편하게 보내기 위해서 널리 사용되는 client 툴
@@ -30,11 +50,11 @@
    - kubernetes의 여러 자원과 다양한 패키지들이 실행되면 명령어의 길이도 길어지게 되는데, kubectl의 기능을 사용하면 이러한 번거로움을 줄일 수 있다.
 
 #### 설치
-- 설치
+- 바이너리 설치 파일 다운로드
 ```
 $ curl -LO https://dl.k8s.io/release/v1.22.1/bin/linux/amd64/kubectl
 ```
-- 권한과 위치 변경
+-설치 및 권한과 위치 변경
 ```
 $ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 ```
@@ -74,17 +94,19 @@ $ minikube version
 ```
 $ minikube start --driver=docker 
 ```
-#### minikube 상태 확인
+<img src="./images/minikube_start.png">
+
+#### minikube 시작상태 확인
 - type, host, kubelet, apiserver, kubeconfig 기능이 실행 되어야 minikube가 정상 작동함 
 ```   
 $ minikube status
 ```
+<img src="./images/minikube_status.png">
 
-
-
-
-
-
-
-
+#### minikube 중지
+- minikube 클러스터를 중지함
+```
+$ minikube stop
+```
+<img src="./images/minikube_stop.png">
 
